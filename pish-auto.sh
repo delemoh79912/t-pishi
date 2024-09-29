@@ -1,26 +1,17 @@
 #!/bin/bash
 
-# Prompt the user for their token
-read -p "Please enter your API token: " token
+# Prompt for API token
+echo "Enter your API token:"
+read api_token
 
-# Check if the token is provided
-if [ -z "$token" ]; then
-    echo "Error: No API token provided."
-    exit 1
-fi
+# Construct the curl command with the placeholder token
+curl_command="curl -X POST 'https://api.catshouse.club/tasks/{task_id}/complete' -H 'Authorization: $api_token'"
 
-# Loop through task IDs from 1 to 500
-for i in {1..500}
-do
-    # Make the POST request with the token in the URL
-    response=$(curl -s -w "%{http_code}" -X POST "https://api.catshouse.club/tasks/$i/complete?token=$token" \
-    -H "Content-Type: application/json")
+# Iterate over task IDs and execute curl commands with a delay
+for task_id in {1..500}; do
+    curl_result=$(eval "$curl_command")
+    echo "Task $task_id: $curl_result"
 
-    # Extract the response code and content
-    http_code=$(echo $response | tail -c 4)
-    echo "Task $i: HTTP Status $http_code"
-
-    # Random sleep between 100ms and 300ms
-    sleep $(awk -v min=0.1 -v max=0.3 'BEGIN{srand(); print min+rand()*(max-min)}')
-
+    # Add a 3-second delay
+    sleep 3
 done
