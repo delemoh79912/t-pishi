@@ -10,7 +10,7 @@ for i in {1..500}
 do
     # Make the POST request with the token in the Authorization header and capture the HTTP code separately
     http_code=$(curl -s -o /dev/null -w "%{http_code}" -X POST "https://api.catshouse.club/tasks/$i/complete" \
-    -H "Authorization: $token" \
+    -H "Authorization: \"$token\"" \
     -H "Content-Type: application/json")
 
     # Output the HTTP code
